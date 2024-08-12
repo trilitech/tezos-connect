@@ -2,8 +2,19 @@
   "name": "@trilitech/tezos-connect",
   "version": "1.0.0",
   "description": "The tezos-connect helps developers to build dApps and wallets for Tezos with a well-defined, standard JSDON RPC interface.",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./dist": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "files": [
     "dist",
     "src/types"
