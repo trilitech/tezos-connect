@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "declaration": true,
     "downlevelIteration": true,
+    "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     "noImplicitAny": true,

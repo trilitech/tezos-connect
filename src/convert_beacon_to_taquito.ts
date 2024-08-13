@@ -1,6 +1,5 @@
 import { OpKind } from "@taquito/taquito";
-import { TezosOperationType } from "./beacon_types";
-import { PartialTezosOperation } from "./operations";
+import { TezosOperationType, PartialTezosOperation } from "./beacon_types";
 import { PartialParamsWithKind } from "./taquito_types";
 
 export function convertToPartialParamsWithKind (op: PartialTezosOperation): PartialParamsWithKind {

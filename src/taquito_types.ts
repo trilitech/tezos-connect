@@ -1,5 +1,4 @@
 import { SmartRollupExecuteOutboxMessageParams } from "@taquito/taquito/dist/types/operations/types";
-import { Optional } from "./beacon_types";
 import {
     ActivationParams,
     DelegateParams,
@@ -15,6 +14,8 @@ import {
     UpdateConsensusKeyParams,
     withKind
 } from "@taquito/taquito";
+
+export type Optional<T, K extends keyof T> = Partial<T> & Omit<T, K>;
 
 export type PartialParamsWithKind =
 | withKind<OriginateParams, OpKind.ORIGINATION>
