@@ -1,77 +1,155 @@
-# Tezos Connect
+# TezosProvider
 
-## Overview
-Tezos Connect is a library designed to standardize the JSON RPC 
-interface between decentralized
-applications (dApps) and wallets on the Tezos blockchain. This
-library contains all necessary interface definitions and utility
-functions to help developers build dApps and wallets with a well-defined,
-standard interface. It assists in creating JSON RPC messages in the
-correct format and validates received JSON RPC requests for syntactic
-correctness.
-This libabry should be used with WalletConnect, an open source protocol
-that allows you to connect your crypto wallet to dapps on the web.
-
-## Features
-- Standardized JSON RPC interface definitions for Tezos dApps and wallets.
-- Utility functions to create and validate JSON RPC messages.
+The `TezosProvider` is a class that allows you to interact with the Tezos blockchain via the WalletConnect protocol.
+This provider manages the connection to the Tezos network, facilitates transactions, and handles account management.
 
 ## Installation
 
-### Using npm
-```sh
-yarn install tezos-connect
+```
+npm i @walletconnect/tezos-provider @walletconnect/modal
 ```
 
-### Using yarn
-```sh
-yarn add tezos-connect
+## Initialization
+
+To use `TezosProvider`, you first need to initialize it with the necessary options:
+
+```typescript
+import TezosProvider from 'path-to-tezos-provider';
+
+const provider = await TezosProvider.init({
+  projectId: 'your-project-id', // REQUIRED WalletConnect project ID
+  metadata: {
+    name: 'Your DApp Name',
+    description: 'Your DApp Description',
+    url: 'https://your-dapp-url.com',
+    icons: ['https://your-dapp-url.com/icon.png'],
+  },
+  relayUrl: 'wss://relay.walletconnect.com', // OPTIONAL WalletConnect relay URL
+  storageOptions: {}, // OPTIONAL key-value storage settings
+  disableProviderPing: false, // OPTIONAL set to true to disable provider ping
+  logger: 'info', // OPTIONAL log level, default is 'info'
+});
 ```
 
-## Usage
-### Importing the Library example
-```ts
-import { PartialTezosOperation } from '@trilitech/tezos-connect';
+Default relay URL is defined in `RelayUrl`.
+
+### Options (TezosProviderOpts)
+
+- `projectId`: Your WalletConnect project ID.
+- `metadata`: Metadata for your DApp, including name, description, url, and icons.
+- `relayUrl`: URL of the WalletConnect relay server.
+- `storageOptions`: Optional settings for key-value storage.
+- `disableProviderPing`: If set to true, disables provider ping.
+- `logger`: Sets the log level, default is 'info'.
+
+## Display WalletConnectModal with QR code / Connecting to the Tezos Network
+
+After initializing the provider, you can connect it to the Tezos network:
+
+```typescript
+await provider.connect({
+  chains: [
+    {
+      id: 'tezos:mainnet',
+      rpc: ['https://mainnet-tezos.giganode.io'],
+    },
+  ],
+  methods: ['tezos_getAccounts', 'tezos_send', 'tezos_sign'],
+  events: [], // OPTIONAL Tezos events
+});
 ```
 
-## Development
-### Cloning the Repository
-```sh
-git clone https://github.com/Trilitech/tezos-connect.git
-cd tezos-connect
+Connection Options (TezosConnectOpts):
+
+- `chains`: An array of chain data, each with an id and rpc endpoint(s). Default chain data is defined in `TezosChainMap`.
+- `methods`: An array of methods that the provider should support. Default methods are defined in `DefaultTezosMethods`.
+- `events`: An array of event names that the provider should listen for.
+
+If you are not using a modal for QR code display, you can subscribe to the `display_uri` event to handle the connection URI yourself:
+
+```typescript
+provider.on("display_uri", (uri: string) => {
+  // Handle the connection URI
+  console.log('Connection URI:', uri);
+});
+
+await provider.connect();
 ```
 
-### Installing Dependencies
+## Sending requests
+
+### Get Accounts
+
+To send a request to the Tezos network:
+
+```typescript
+const accounts = await provider.request({ method: "tezos_getAccounts" });
+
+// OR
+
+provider.sendAsync({ method: "tezos_getAccounts" }, callbackFunction);
 ```
-yarn install
+
+### Send Transactions
+
+To send a transaction:
+
+```typescript
+const transactionResponse = await provider.tezosSendTransaction({
+  kind: 'transaction',
+  destination: 'tz1...',
+  amount: '1000000', // Amount in mutez
+});
+
+console.log('Transaction hash:', transactionResponse.hash);
 ```
 
-### Building the Library
+### Sign Messages
+
+To sign a message, encode it to hex first:
+
+```typescript
+const textEncoder = new TextEncoder();
+const bytes = textEncoder.encode('Your string here');
+const hexBytes = Buffer.from(bytes).toString('hex');
+
+const signResponse = await provider.tezosSign({
+  payload: hexBytes,
+});
+
+console.log('Signature:', signResponse.signature);
 ```
-yarn build
+
+## Events
+
+Listen to various events from the TezosProvider:
+
+```typescript
+// chain changed
+provider.on("chainChanged", handler);
+// accounts changed
+provider.on("accountsChanged", handler);
+// session established
+provider.on("connect", handler);
+// session event - chainChanged/accountsChanged/custom events
+provider.on("session_event", handler);
+// connection uri
+provider.on("display_uri", handler);
+// session disconnect
+provider.on("disconnect", handler);
 ```
-### Running Tests
-```
-yarn test
-yarn type-test
-```
 
-## Contributing
-We welcome contributions to the Tezos Connect library! Please follow these steps to contribute:
+## Error Handling
+The provider will throw errors if:
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature`).
-3. Make your changes.
-4. Commit your changes (`git commit -m 'Add some feature'`).
-5. Push to the branch (`git push origin feature/your-feature`).
-6. Create a new Pull Request.
+- `TezosInitializationError`: If the provider is not initialized correctly.
+- `TezosProviderError`: If there are issues with the connection or account retrieval.
 
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## Supported WalletConnectModal options (qrModalOptions)
 
-## Contact
-For any questions or suggestions, please open an issue or submit a pull request.
+Please reference the [up-to-date WalletConnect documentation](https://docs.walletconnect.com) for any additional `qrModalOptions`.
 
----
+## References
 
-Happy coding with Tezos!
+- [Tezos documentation for WalletConnect](https://docs.walletconnect.com/advanced/multichain/rpc-reference/tezos-rpc)
+- [dApp examples](https://github.com/WalletConnect/web-examples/tree/main/dapps)

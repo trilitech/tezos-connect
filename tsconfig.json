@@ -1,49 +1,48 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    
-    "useDefineForClassFields": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
     "allowJs": false,
-    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "alwaysStrict": true /* Parse in strict mode and emit "use strict" for each source file. */,
-    "baseUrl": ".",
+    "alwaysStrict": true,
+    "composite": true,
     "declaration": true,
+    "declarationMap": true,
     "downlevelIteration": true,
-    "isolatedModules": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
+    "importHelpers": true,
+    "lib": ["ES2020", "DOM"],
+    "module": "ES2020",
+    "target": "ES2020",
+    "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedLocals": true /* Report errors on unused locals. */,
-    "noUnusedParameters": true /* Report errors on unused parameters. */,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "noLib": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveSymlinks": true,
+    "removeComments": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "strict": true /* Enable all strict type-checking options. */,
-    "strictBindCallApply": true /* Enable strict 'bind', 'call', and 'apply' methods on functions. */,
-    "strictFunctionTypes": true /* Enable strict checking of function types. */,
-    "strictNullChecks": true /* Enable strict null checks. */,
-    "strictPropertyInitialization": true /* Enable strict checking of property initialization in classes. */,
-    /* Additional Checks */
+    "strict": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+
+    "rootDir": ".",
+    "outDir": "./dist/types",
+    "emitDeclarationOnly": true,
+    "ignoreDeprecations": "5.0"
+
   },
-  "include": [
-    "src/**/*",
-    "test/**/*.test-d.ts"
-  ],
+  "include": ["./src/**/*.ts", "./src/constants.ts", "./src/types.ts", "./src/TezosProvider.ts"],
   "exclude": [
     "node_modules",
-    "dist",
-    "test"
+    "test",
+    "dist"
   ]
-}
+  }

@@ -1,79 +1,78 @@
 {
-  "name": "@trilitech/tezos-connect",
+  "name": "@trilitech/tezos-provider",
+  "description": "Tezos Provider for WalletConnect Protocol",
   "version": "1.0.0",
-  "description": "The tezos-connect helps developers to build dApps and wallets for Tezos with a well-defined, standard JSDON RPC interface.",
+  "author": "Trilitech TriliTech <contact@trili.tech>> (https://trili.tech)",
+  "homepage": "https://trili.tech",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trilitech/tezos-connect",
+    "directory": "."
+  },
+  "license": "MIT",
   "type": "module",
-  "module": "./dist/index.js",
-  "main": "./dist/index.cjs",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "unpkg": "dist/index.umd.js",
+  "types": "dist/types/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/types/index.d.ts",
+      "module": "./dist/index.es.js",
+      "default": "./dist/index.cjs.js"
     }
   },
-  "tsd": {
-    "directory": "test"
-  },
-  "tsup": {
-    "entry": [
-      "src/*"
-    ],
-    "dts": true,
-    "clean": true,
-    "format": [
-      "cjs",
-      "esm"
-    ]
-  },
-  "scripts": {
-    "build": "tsup",
-    "clean": "rm -rf dist",
-    "prepare": "echo 'Running prepare script for tezos-connect...' && yarn build",
-    "prettier": "prettier --write 'src/*'",
-    "lint": "eslint 'src/**/*.ts'",
-    "lint:fix": "eslint 'src/**/*.ts' --fix",
-    "lint-ci": "eslint 'src/**/*.ts' -f json -o lintReport.json || true",
-    "test": "jest",
-    "type-test": "tsd"
-  },
-  "keywords": [
-    "tezos",
-    "tezos-connect",
-    "crypto",
-    "blockchain",
-    "tezos",
-    "decentralized",
-    "dapp",
-    "wallet"
+  "files": [
+    "dist"
   ],
-  "author": "Trilitech TriliTech <contact@trili.tech>> (https://trili.tech)",
-  "license": "MIT",
-  "homepage": "https://trili.tech",
-  "devDependencies": {
-    "@airgap/beacon-sdk": "^4.2.2",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^20.14.12",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.2.4",
-    "ts-node": "^10.9.2",
-    "tsd": "^0.31.1",
-    "tsup": "^8.2.4",
-    "typescript": "^5.5.4"
+  "keywords": [
+    "wallet",
+    "walletconnect"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "yarn build:source; yarn build:types",
+    "build:types": "tsc",
+    "build:source": "tsup ./tsup.config.ts",
+    "test:pre": "rm -rf ./test/test.db",
+    "test:run": "jest",
+    "test": "yarn test:pre; yarn test:run",
+    "test:ignoreUnhandled": "yarn test:pre; yarn test:run -- --dangerouslyIgnoreUnhandledErrors",
+    "prettier": "prettier --check '{src,test}/**/*.{js,ts,jsx,tsx}' --write",
+    "lint": "eslint -c 'eslint.config.mjs' --fix './src/**/*.ts'",
+    "lint:ci": "eslint 'src/**/*.ts' -f json -o lintReport.json || true"
   },
   "dependencies": {
+    "@airgap/beacon-types": "^4.2.2",
     "@taquito/rpc": "^20.0.1",
-    "@taquito/signer": "^20.0.1",
     "@taquito/taquito": "^20.0.1",
-    "bufferutil": "^4.0.8",
-    "encoding": "^0.1.13",
-    "pino-pretty": "^11.2.2",
-    "prettier": "^3.3.3",
-    "utf-8-validate": "^6.0.4"
+    "@walletconnect/keyvaluestorage": "^1.1.1",
+    "@walletconnect/logger": "^2.1.2",
+    "@walletconnect/types": "2.13.3",
+    "@walletconnect/universal-provider": "^2.17.1",
+    "axios": "^1.7.7",
+    "micromatch": "^4.0.8",
+    "package.json": "^2.0.1",
+    "rollup": "^4.24.0",
+    "typescript": "^5.6.3",
+    "yarn.lock": "^0.0.1-security"
   },
-  "packageManager": "yarn@4.4.0",
-  "peerDependencies": {
-    "@airgap/beacon-sdk": "*"
-  }
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@swc/core": "^1.7.35",
+    "@types/micromatch": "^4",
+    "@typescript-eslint/eslint-plugin": "^8.8.1",
+    "@typescript-eslint/parser": "^8.8.1",
+    "depcheck": "^1.4.7",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.5",
+    "tsup": "^8.2.4"
+  },
+  "packageManager": "yarn@4.4.0"
 }
